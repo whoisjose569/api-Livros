@@ -6,9 +6,21 @@ from livros.api.serializers import LivroSerializer, AutorSerializer
 class LivroViewSet(ModelViewSet):
     serializer_class = LivroSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'author', 'genre', 'year_of_publication']
+    search_fields = ['title','genre']
     queryset = Livro.objects.all()
     
+    def get_queryset(self):
+        title = self.request.query_params.get('title', None)
+        genre = self.request.query_params.get('genre', None)
+        queryset = Livro.objects.all()
+
+        if title:
+            queryset = queryset.filter(title=title)
+        
+        if genre:
+            queryset = queryset.filter(genre=genre)
+
+        return queryset
     
 
 
