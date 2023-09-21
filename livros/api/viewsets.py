@@ -34,3 +34,12 @@ class AutorViewSet(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ['name',]
     queryset = Autor.objects.all()
+    
+    def get_queryset(self):
+        name = self.request.query_params.get('name', None)
+        queryset = Autor.objects.all()
+        
+        if name:
+            queryset = queryset.filter(name=name)
+            queryset = queryset.prefetch_related('livros')
+        return queryset
